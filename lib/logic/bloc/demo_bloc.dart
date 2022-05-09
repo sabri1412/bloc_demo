@@ -18,25 +18,21 @@ class DemoBloc extends Bloc<DemoEvent, DemoState> {
   final TextEditingController username = TextEditingController();
 
   void _updateList(UpdateList event, Emitter<DemoState> emit) async {
-    //load items
     emit(LoadState(validInput: state.validInput, persons: state.persons));
     var persons = await LocalDb.getPersons();
     emit(NormalState(validInput: state.validInput, persons: persons));
   }
 
   void _updateUI(UpdateUI event, Emitter<DemoState> emit) {
-    //load items
     if (!state.validInput) {
       emit(NormalState(validInput: true, persons: state.persons));
     }
   }
 
   void _addPerson(AddPerson event, Emitter<DemoState> emit) {
-    //show error
     if (username.text.length < 3) {
       emit(NormalState(validInput: false, persons: state.persons));
     } else {
-      //add
       LocalDb.addPerson(Person(username.text));
       add(UpdateList());
     }
